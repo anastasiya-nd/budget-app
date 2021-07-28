@@ -16,7 +16,5 @@
     "url": "https://github.com/anastasiya-nd/budget-app/issues"
   },
   "homepage": "https://github.com/anastasiya-nd/budget-app#readme",
-  "dependencies": {
-    "editorconfig": "^0.15.3"
-  }
+  "dependencies": {}
 }
