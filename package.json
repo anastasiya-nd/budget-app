@@ -15,5 +15,6 @@
   "bugs": {
     "url": "https://github.com/anastasiya-nd/budget-app/issues"
   },
-  "homepage": "https://github.com/anastasiya-nd/budget-app#readme"
+  "homepage": "https://github.com/anastasiya-nd/budget-app#readme",
+  "dependencies": {}
 }
