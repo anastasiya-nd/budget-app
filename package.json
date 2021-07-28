@@ -16,7 +16,9 @@
     "url": "https://github.com/anastasiya-nd/budget-app/issues"
   },
   "homepage": "https://github.com/anastasiya-nd/budget-app#readme",
-  "dependencies": {},
+  "dependencies": {
+    "express": "^4.17.1"
+  },
   "devDependencies": {
     "eslint": "^7.31.0",
     "eslint-config-prettier": "^8.3.0",
@@ -25,7 +27,6 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-promise": "^5.1.0",
-    "express": "^4.17.1",
     "prettier": "^2.3.2"
   }
 }
