@@ -1,0 +1,292 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: Budget API
+  description: |
+    REST API service for providing/storing budget data by request
+schemes:
+- http
+basePath: /api/v1
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /spendings:
+    get:
+      summary: Get a list of spendings
+      description: ""
+      tags:
+      - Spendings
+      parameters:
+      - name: category
+        in: query
+        description: budget category
+        type: string
+        required: false
+        enum:
+        - entertainment
+        - car
+        - bill
+        - food
+        - home
+        - education
+        - other
+      - name: labels
+        in: query
+        description: labels
+        type: array
+        collectionFormat: csv
+        items:
+          type: string
+        required: false
+      - name: start
+        in: query
+        description: date the start of period
+        type: date
+        required: false
+      - name: end
+        in: query
+        description: date the end of period
+        type: date
+        required: false
+      - name: page
+        in: query
+        description: page number
+        type: integer
+        required: true
+      - name: perPage
+        in: query
+        description: results per page
+        type: integer
+        required: true
+      - name: sortBy
+        in: query
+        description: sort result by this field
+        type: string
+        required: false
+      - name: sortOrder
+        in: query
+        description: sort order
+        type: string
+        enum: [asc, desc]
+        required: fasle
+      security:
+      - x_auth: []
+      responses:
+        '200':
+          description: "Successful operation"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Spending"
+        '405':
+          description: Not allowed - Method is not allowed on the current resource
+        '500':
+          description: Internal Error - Internal server error
+        default:
+          description: Unexpected error
+    post:
+      summary: Save one spending
+      description: ""
+      parameters:
+      - name: category
+        in: body
+        description: budget category
+        type: string
+        required: true
+        enum:
+        - entertainment
+        - car
+        - bill
+        - food
+        - home
+        - education
+        - other
+      - name: note
+        in: body
+        description: note description
+        type: string
+        required: false
+      - name: createdAt
+        in: body
+        description: date of spending
+        type: date
+        required: true
+      - name: labels
+        in: body
+        description: labels
+        type: array
+        collectionFormat: csv
+        items:
+          type: string
+        required: false
+      - name: amount
+        in: body
+        description: amount
+        type: number
+        required: true
+      - name: currency
+        in: body
+        description: currency
+        type: string
+        required: true
+      security:
+      - x_auth: []
+      responses:
+        '200':
+          description: "Successful operation"
+          schema:
+            type: object
+            items:
+              $ref: "#/definitions/Spending"
+        '405':
+          description: Not allowed - Method is not allowed on the current resource
+        '500':
+          description: Internal Error - Internal server error
+        default:
+          description: Unexpected error
+  '/spendings/{id}':
+    get:
+      summary: Get one spending
+      description: ""
+      tags:
+      - Spending
+      parameters:
+      - name: id
+        in: path
+        description: id of spending item
+        required: true
+        type: string
+      security:
+      - x_auth: []
+      responses:
+        '200':
+          description: "Successful operation"
+          schema:
+            type: object
+            items:
+              $ref: "#/definitions/Spending"
+        '405':
+          description: Not allowed - Method is not allowed on the current resource
+        '500':
+          description: Internal Error - Internal server error
+        default:
+          description: Unexpected error
+    patch:
+      summary: Update one spending
+      description: ""
+      parameters:
+      - name: id
+        in: path
+        description: id of spending item
+        required: true
+        type: string
+      - name: category
+        in: body
+        description: budget category
+        type: string
+        required: false
+        enum:
+        - entertainment
+        - car
+        - bill
+        - food
+        - home
+        - education
+        - other
+      - name: note
+        in: body
+        description: note description
+        type: string
+        required: false
+      - name: createdAt
+        in: body
+        description: date of spending
+        type: date
+        required: false
+      - name: labels
+        in: body
+        description: labels
+        type: array
+        collectionFormat: csv
+        items:
+          type: string
+        required: false
+      - name: amount
+        in: body
+        description: amount
+        type: number
+        required: false
+      - name: currency
+        in: body
+        description: currency
+        type: string
+        required: false
+      security:
+      - x_auth: []
+      responses:
+        '200':
+          description: "Successful operation"
+          schema:
+            type: object
+            items:
+              $ref: "#/definitions/Spending"
+        '405':
+          description: Not allowed - Method is not allowed on the current resource
+        '500':
+          description: Internal Error - Internal server error
+        default:
+          description: Unexpected error
+    delete:
+      summary: Delete one spending
+      description: ""
+      parameters:
+      - name: id
+        in: path
+        description: id of spending item
+        required: true
+        type: string
+      security:
+      - x_auth: []
+      responses:
+        '200':
+          description: "Successful operation"
+        '405':
+          description: Not allowed - Method is not allowed on the current resource
+        '500':
+          description: Internal Error - Internal server error
+        default:
+          description: Unexpected error
+definitions:
+  Spending:
+    type: object
+    properties:
+      id:
+        type: string
+      createdAt:
+        type: date
+      labels:
+        type: array
+      category:
+        type: string
+        enum:
+        - entertainment
+        - car
+        - bill
+        - food
+        - home
+        - education
+        - other
+      note:
+        type: string
+      amount:
+        type: number
+      currency:
+        type: string
+    required:
+      - id
+      - createdAt
+      - category
+      - amount
+      - currency
