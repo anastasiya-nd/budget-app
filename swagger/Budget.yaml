@@ -131,6 +131,11 @@ paths:
         description: currency
         type: string
         required: true
+        enum:
+        - USD
+        - EUR
+        - RUB
+        - BYN
       security:
       - x_auth: []
       responses:
@@ -223,6 +228,11 @@ paths:
         description: currency
         type: string
         required: false
+        enum:
+          - USD
+          - EUR
+          - RUB
+          - BYN
       security:
       - x_auth: []
       responses:
@@ -284,6 +294,11 @@ definitions:
         type: number
       currency:
         type: string
+        enum:
+        - USD
+        - EUR
+        - RUB
+        - BYN
     required:
       - id
       - createdAt
