@@ -1,14 +1,14 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
-const {Spending }= require('./models/Spending')
+const { Spending } = require('./models/Spending')
 const { HTTP_STATUS_CODES } = require('./constants');
 const app = express()
 const port = 3000
 
 app.use(bodyParser.json())
 
-app.post('/', function (req, res) {
+app.post('/', (req, res) => {
   Spending.create({
     createdAt: req.body.createdAt,
     labels: req.body.labels.split(','),
@@ -18,14 +18,13 @@ app.post('/', function (req, res) {
     currency: req.body.currency,
   }, function (err, spending) {
     if (err) {
-      return res.status(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR).send({error: 'Internal Error - Internal server error'})
+      res.status(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR).send({error: 'Internal Error - Internal server error'})
     } else {
       console.log(spending)
-      return res.status(HTTP_STATUS_CODES.OK).send('Successful operation')
+      res.status(HTTP_STATUS_CODES.OK).send('Successful operation')
     }
   })
 });
-
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
