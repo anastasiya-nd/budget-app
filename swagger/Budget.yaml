@@ -145,8 +145,6 @@ paths:
             type: object
             items:
               $ref: "#/definitions/Spending"
-        '405':
-          description: Not allowed - Method is not allowed on the current resource
         '500':
           description: Internal Error - Internal server error
         default:
