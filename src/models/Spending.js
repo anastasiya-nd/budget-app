@@ -27,4 +27,4 @@ const spendingSchema = new Schema({
 
 const Spending = mongoose.model('Spending', spendingSchema)
 
-module.exports = { Spending }
+module.exports = {Spending}
