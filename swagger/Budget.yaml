@@ -60,17 +60,6 @@ paths:
         description: results per page
         type: integer
         required: true
-      - name: sortBy
-        in: query
-        description: sort result by this field
-        type: string
-        required: false
-      - name: sortOrder
-        in: query
-        description: sort order
-        type: string
-        enum: [asc, desc]
-        required: fasle
       security:
       - x_auth: []
       responses:

@@ -8,17 +8,19 @@ const port = 3000
 
 app.use(bodyParser.json())
 
-app.post('/', (req, res) => {
+app.post('/spendings', (req, res) => {
   Spending.create({
     createdAt: req.body.createdAt,
-    labels: req.body.labels.split(','),
+    labels: req.body.labels,
     category: req.body.category,
     note: req.body.note,
     amount: req.body.amount,
     currency: req.body.currency,
   }, function (err, spending) {
     if (err) {
-      res.status(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR).send({error: 'Internal Error - Internal server error'})
+      res
+        .status(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR)
+        .send({error: 'Internal Error - Internal server error'})
     } else {
       console.log(spending)
       res.status(HTTP_STATUS_CODES.OK).send('Successful operation')
@@ -26,11 +28,97 @@ app.post('/', (req, res) => {
   })
 });
 
+const setFilters = (links) => {
+  const filter = {}
+
+  links.forEach( link => {
+    if (link.value) {
+      if(!Object.keys(filter).includes(link.name)) {
+        filter[link.name] = (link.key) ? ( {[link.key]: link.value} ) : link.value
+      }
+      else {
+        const obj = filter[link.name];
+        obj[link.key]=link.value
+      }
+    }
+  })
+
+  return filter
+}
+
+app.get('/spendings', (req, res) => {
+  const {
+    page,
+    perPage,
+    category,
+    labels,
+    start,
+    end
+  } = req.query;
+
+  console.log('labels ' + labels)
+
+  if (page === undefined) {
+    res
+      .status(HTTP_STATUS_CODES.BAD_REQUEST)
+      .send({ error: '\'page\' is required' });
+    return;
+  }
+
+  if (perPage === undefined) {
+    res
+      .status(HTTP_STATUS_CODES.BAD_REQUEST)
+      .send({ error: '\'perPage\' is required' });
+    return;
+  }
+
+  if (page < 1) {
+    res
+      .status(HTTP_STATUS_CODES.BAD_REQUEST)
+      .send({ error: '\'page\' should be greater than 0' });
+    return;
+  }
+
+  const links = [
+    { name: 'category', value: category },
+    { name: 'labels', value: labels ? labels.split(',') : undefined, key: '$in' },
+    { name: 'createdAt', value: start, key: '$gte' },
+    { name: 'createdAt', value: end, key: '$lte' }
+  ]
+
+  const filter = setFilters(links)
+
+  Spending.find(filter, (err, spendings) => {
+    if (err) {
+      res
+        .status(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR)
+        .send({error: 'Internal Error - Internal server error'})
+    } else {
+      const spendingCount = spendings.length;
+
+      console.log('spendingCount ' + spendingCount)
+
+      res.status(HTTP_STATUS_CODES.OK).send({
+        spendings: spendings,
+        pagination: {
+          spendingCount,
+          total: Math.ceil(spendingCount/perPage),
+          page,
+          perPage,
+        }
+      })
+    }
+  }).sort({createdAt: -1}).limit(+perPage).skip((page-1) * perPage);
+})
+
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
 
-mongoose.connect('mongodb://localhost:27017/some-mongo', {useNewUrlParser: true, useUnifiedTopology: true})
+mongoose.connect('mongodb://localhost:27017/some-mongo', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
 
 mongoose.connection.on('error', (err) => {
   console.error("Database Connection Error: " + err)
