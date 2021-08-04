@@ -56,8 +56,6 @@ app.get('/spendings', (req, res) => {
     end
   } = req.query;
 
-  console.log('labels ' + labels)
-
   if (page === undefined) {
     res
       .status(HTTP_STATUS_CODES.BAD_REQUEST)
@@ -88,27 +86,31 @@ app.get('/spendings', (req, res) => {
 
   const filter = setFilters(links)
 
-  Spending.find(filter, (err, spendings) => {
+  Spending.countDocuments( filter, (err, count) => {
     if (err) {
       res
         .status(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR)
         .send({error: 'Internal Error - Internal server error'})
     } else {
-      const spendingCount = spendings.length;
-
-      console.log('spendingCount ' + spendingCount)
-
-      res.status(HTTP_STATUS_CODES.OK).send({
-        spendings: spendings,
-        pagination: {
-          spendingCount,
-          total: Math.ceil(spendingCount/perPage),
-          page,
-          perPage,
+      Spending.find(filter, (err, spendings) => {
+        if (err) {
+          res
+            .status(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR)
+            .send({error: 'Internal Error - Internal server error'})
+        } else {
+          res.status(HTTP_STATUS_CODES.OK).send({
+            spendings: spendings,
+            pagination: {
+              spendingCount: count,
+              total: Math.ceil(count/perPage),
+              page,
+              perPage,
+            }
+          })
         }
-      })
+      }).sort({createdAt: -1}).limit(+perPage).skip((page-1) * perPage);
     }
-  }).sort({createdAt: -1}).limit(+perPage).skip((page-1) * perPage);
+  });
 })
 
 app.listen(port, () => {
