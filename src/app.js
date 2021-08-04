@@ -2,7 +2,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const { Spending } = require('./models/Spending')
-const { HTTP_STATUS_CODES } = require('./constants');
+const { HTTP_STATUS_CODES } = require('./constants')
 const app = express()
 const port = 3000
 
@@ -15,30 +15,28 @@ app.post('/spendings', (req, res) => {
     category: req.body.category,
     note: req.body.note,
     amount: req.body.amount,
-    currency: req.body.currency,
+    currency: req.body.currency
   }, function (err, spending) {
     if (err) {
       res
         .status(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR)
-        .send({error: 'Internal Error - Internal server error'})
+        .send({ error: 'Internal Error - Internal server error' })
     } else {
-      console.log(spending)
       res.status(HTTP_STATUS_CODES.OK).send('Successful operation')
     }
   })
-});
+})
 
 const setFilters = (links) => {
   const filter = {}
 
-  links.forEach( link => {
+  links.forEach(link => {
     if (link.value) {
-      if(!Object.keys(filter).includes(link.name)) {
-        filter[link.name] = (link.key) ? ( {[link.key]: link.value} ) : link.value
-      }
-      else {
-        const obj = filter[link.name];
-        obj[link.key]=link.value
+      if (!Object.keys(filter).includes(link.name)) {
+        filter[link.name] = (link.key) ? ({ [link.key]: link.value }) : link.value
+      } else {
+        const obj = filter[link.name]
+        obj[link.key] = link.value
       }
     }
   })
@@ -48,33 +46,18 @@ const setFilters = (links) => {
 
 app.get('/spendings', (req, res) => {
   const {
-    page,
-    perPage,
+    page = 1,
+    perPage = 5,
     category,
     labels,
     start,
     end
-  } = req.query;
-
-  if (page === undefined) {
-    res
-      .status(HTTP_STATUS_CODES.BAD_REQUEST)
-      .send({ error: '\'page\' is required' });
-    return;
-  }
-
-  if (perPage === undefined) {
-    res
-      .status(HTTP_STATUS_CODES.BAD_REQUEST)
-      .send({ error: '\'perPage\' is required' });
-    return;
-  }
+  } = req.query
 
   if (page < 1) {
-    res
+    return res
       .status(HTTP_STATUS_CODES.BAD_REQUEST)
-      .send({ error: '\'page\' should be greater than 0' });
-    return;
+      .send({ error: '\'page\' should be greater than 0' })
   }
 
   const links = [
@@ -86,31 +69,30 @@ app.get('/spendings', (req, res) => {
 
   const filter = setFilters(links)
 
-  Spending.countDocuments( filter, (err, count) => {
+  Spending.countDocuments(filter, (err, count) => {
     if (err) {
       res
         .status(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR)
-        .send({error: 'Internal Error - Internal server error'})
+        .send({ error: 'Internal Error - Internal server error' })
     } else {
       Spending.find(filter, (err, spendings) => {
         if (err) {
           res
             .status(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR)
-            .send({error: 'Internal Error - Internal server error'})
+            .send({ error: 'Internal Error - Internal server error' })
         } else {
           res.status(HTTP_STATUS_CODES.OK).send({
             spendings: spendings,
             pagination: {
-              spendingCount: count,
-              total: Math.ceil(count/perPage),
+              total: Math.ceil(count / perPage),
               page,
-              perPage,
+              perPage
             }
           })
         }
-      }).sort({createdAt: -1}).limit(+perPage).skip((page-1) * perPage);
+      }).sort({ createdAt: -1 }).limit(+perPage).skip((page - 1) * perPage)
     }
-  });
+  })
 })
 
 app.listen(port, () => {
@@ -123,10 +105,10 @@ mongoose.connect('mongodb://localhost:27017/some-mongo', {
 })
 
 mongoose.connection.on('error', (err) => {
-  console.error("Database Connection Error: " + err)
+  console.error('Database Connection Error: ' + err)
   process.exit(1)
 })
 
 mongoose.connection.once('connected', () => {
-  console.info("Succesfully connected to MongoDB Database")
+  console.info('Succesfully connected to MongoDB Database')
 })
