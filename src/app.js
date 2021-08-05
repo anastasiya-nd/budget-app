@@ -95,6 +95,20 @@ app.get('/spendings', (req, res) => {
   })
 })
 
+app.delete('/spendings/:id', (req, res) => {
+  const id = req.params.id
+
+  Spending.findByIdAndDelete(id, function (err) {
+    if (err) {
+      res
+        .status(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR)
+        .send({ error: 'Internal Error - Internal server error' })
+    } else {
+      res.status(HTTP_STATUS_CODES.OK).send('Successful operation')
+    }
+  })
+})
+
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
