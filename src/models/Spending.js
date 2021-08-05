@@ -5,23 +5,23 @@ const spendingSchema = new Schema({
   createdAt: {
     type: Date,
     default: new Date(),
-    required: true,
+    required: true
   },
   labels: Array,
   category: {
     type: String,
     enum: ['entertainment', 'car', 'bill', 'food', 'home', 'education', 'other'],
-    required: true,
+    required: true
   },
   note: String,
   amount: {
     type: Number,
-    required: true,
+    required: true
   },
   currency: {
     type: String,
     enum: ['USD', 'EUR', 'RUB', 'BYN'],
-    required: true,
+    required: true
   }
 })
 
