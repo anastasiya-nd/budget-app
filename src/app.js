@@ -122,6 +122,21 @@ app.get('/spendings/:id', (req, res) => {
   })
 })
 
+app.patch('/spendings/:id', (req, res) => {
+  const { ...values } = req.body
+  const id = req.params.id
+
+  Spending.findByIdAndUpdate(id, values, (err, spending) => {
+    if (err) {
+      res
+        .status(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR)
+        .send({ error: 'Internal Error - Internal server error' })
+    } else {
+      res.status(HTTP_STATUS_CODES.OK).send(spending)
+    }
+  })
+})
+
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
