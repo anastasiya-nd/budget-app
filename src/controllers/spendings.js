@@ -73,6 +73,7 @@ const createSpending = async (req, res) => {
       amount: req.body.amount,
       currency: req.body.currency
     })
+
     res.status(HTTP_STATUS_CODES.OK).send('Successful operation')
   } catch (error) {
     res

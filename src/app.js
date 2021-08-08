@@ -13,7 +13,7 @@ app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}/api/v1/`)
 })
 
-mongoose.connect('mongodb://localhost:27017/some-mongo', {
+mongoose.connect('mongodb://localhost:27017/budget-app', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
