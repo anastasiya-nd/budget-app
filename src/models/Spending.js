@@ -10,7 +10,7 @@ const spendingSchema = new Schema({
   labels: Array,
   category: {
     type: String,
-    enum: ['entertainment', 'car', 'bill', 'food', 'home', 'education', 'other'],
+    enum: ['shopping', 'entertainment', 'car', 'bills', 'food', 'home', 'education', 'other'],
     required: true
   },
   note: String,
