@@ -25,9 +25,10 @@ paths:
         type: string
         required: false
         enum:
+        - shopping
         - entertainment
         - car
-        - bill
+        - bills
         - food
         - home
         - education
