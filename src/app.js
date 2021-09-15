@@ -3,9 +3,11 @@ const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const spendingsRoute = require('./routes/spendings')
 const port = 3000
+const cors = require('cors')
 
 const app = express()
 
+app.use(cors())
 app.use(bodyParser.json())
 app.use('/api/v1/spendings', spendingsRoute)
 
