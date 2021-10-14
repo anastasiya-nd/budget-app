@@ -10,7 +10,7 @@ const spendingSchema = new Schema({
   labels: Array,
   category: {
     type: String,
-    enum: ['shopping', 'entertainment', 'car', 'bills', 'food', 'home', 'education', 'other'],
+    enum: ['Shopping', 'Entertainment', 'Car', 'Bills', 'Food', 'Home', 'Education', 'Other'],
     required: true
   },
   note: String,
@@ -20,7 +20,7 @@ const spendingSchema = new Schema({
   },
   currency: {
     type: String,
-    enum: ['USD', 'EUR', 'RUB', 'BYN'],
+    enum: ['usd', 'eur', 'rub', 'byn'],
     required: true
   }
 })
