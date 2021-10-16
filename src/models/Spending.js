@@ -20,7 +20,7 @@ const spendingSchema = new Schema({
   },
   currency: {
     type: String,
-    enum: ['USD', 'EUR', 'RUB', 'BYN'],
+    enum: ['usd', 'eur', 'rub', 'byn'],
     required: true
   }
 })

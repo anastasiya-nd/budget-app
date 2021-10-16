@@ -65,7 +65,7 @@ const getSpendings = async (req, res) => {
 
 const createSpending = async (req, res) => {
   try {
-    await Spending.create({
+    const spending = await Spending.create({
       createdAt: req.body.createdAt,
       labels: req.body.labels,
       category: req.body.category,
@@ -74,7 +74,7 @@ const createSpending = async (req, res) => {
       currency: req.body.currency
     })
 
-    res.status(HTTP_STATUS_CODES.OK).send('Successful operation')
+    res.status(HTTP_STATUS_CODES.OK).send(spending)
   } catch (error) {
     res
       .status(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR)
