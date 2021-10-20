@@ -21,8 +21,8 @@ const setFilters = (links) => {
 const getSpendings = async (req, res) => {
   try {
     const {
-      page = 1,
-      perPage = 5,
+      page,
+      perPage,
       category,
       labels,
       start,
@@ -113,8 +113,8 @@ const updateSpending = async (req, res) => {
     const { ...values } = req.body
     const id = req.params.id
 
-    const spending = await Spending.findByIdAndUpdate(id, values)
-
+    const spending = await Spending.findByIdAndUpdate(id, values, { new: true })
+    console.log(spending)
     res.status(HTTP_STATUS_CODES.OK).send(spending)
   } catch (error) {
     res
