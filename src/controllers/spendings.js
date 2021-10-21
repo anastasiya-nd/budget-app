@@ -114,7 +114,6 @@ const updateSpending = async (req, res) => {
     const id = req.params.id
 
     const spending = await Spending.findByIdAndUpdate(id, values, { new: true })
-    console.log(spending)
     res.status(HTTP_STATUS_CODES.OK).send(spending)
   } catch (error) {
     res
