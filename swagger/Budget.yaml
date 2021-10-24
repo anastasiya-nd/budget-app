@@ -256,6 +256,33 @@ paths:
           description: Internal Error - Internal server error
         default:
           description: Unexpected error
+  /chart:
+    get:
+      summary: Get chart data
+      description: ""
+      tags:
+      - Chart
+      parameters:
+      - name: year
+        in: query
+        description: year for chart data
+        type: date
+        required: true
+      security:
+      - x_auth: []
+      responses:
+        '200':
+          description: "Successful operation"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/ChartData"
+        '405':
+          description: Not allowed - Method is not allowed on the current resource
+        '500':
+          description: Internal Error - Internal server error
+        default:
+          description: Unexpected error
 definitions:
   Spending:
     type: object
@@ -271,11 +298,12 @@ definitions:
         enum:
         - entertainment
         - car
-        - bill
+        - bills
         - food
         - home
         - education
         - other
+        - shopping
       note:
         type: string
       amount:
@@ -293,3 +321,22 @@ definitions:
       - category
       - amount
       - currency
+  ChartData:
+    type: object
+    properties:
+      category:
+        type: string
+        enum:
+        - entertainment
+        - car
+        - bills
+        - food
+        - home
+        - education
+        - other
+        - shopping
+      amounts:
+        type: array
+    required:
+      - category
+      - amounts

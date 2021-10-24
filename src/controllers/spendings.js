@@ -1,5 +1,5 @@
 const { Spending } = require('../models/Spending')
-const { HTTP_STATUS_CODES } = require('../constants')
+const { HTTP_STATUS_CODES, CURRENCY } = require('../constants')
 
 const setFilters = (links) => {
   const filter = {}
@@ -16,6 +16,56 @@ const setFilters = (links) => {
   })
 
   return filter
+}
+
+const getCategoryItems = (categoryName, items) => {
+  return items.filter((i) => i.category === categoryName)
+}
+
+const setChartData = (spendings) => {
+  const categories = [
+    'other',
+    'shopping',
+    'entertainment',
+    'car',
+    'bills',
+    'food',
+    'home',
+    'education'
+  ]
+  const data = []
+
+  categories.forEach(category => {
+    const obj = {}
+    obj.category = category
+    const categoryItems = getCategoryItems(category, spendings)
+    const amounts = []
+    for (let i = 0; i < 12; i++) {
+      let sum = 0
+      categoryItems.forEach((item) => {
+        if (
+          new Date(item.createdAt).getMonth() === i
+        ) {
+          if (item.currency === 'usd') {
+            sum += item.amount * CURRENCY.USD
+          }
+          if (item.currency === 'rub') {
+            sum += item.amount * CURRENCY.RUB
+          }
+          if (item.currency === 'eur') {
+            sum += item.amount * CURRENCY.EUR
+          }
+          if (item.currency === 'byn') {
+            sum += item.amount
+          }
+        }
+      })
+      amounts[i] = sum
+    }
+    obj.amounts = amounts
+    data.push(obj)
+  })
+  return data
 }
 
 const getSpendings = async (req, res) => {
@@ -122,10 +172,26 @@ const updateSpending = async (req, res) => {
   }
 }
 
+const getChartData = async (req, res) => {
+  try {
+    const { year } = req.query
+    const spendings = await Spending.find({ createdAt: { $gte: new Date(year, 1, 1), $lte: new Date(year, 12, 31) } }).sort({ createdAt: -1 })
+    const chartData = await setChartData(spendings)
+    res.status(HTTP_STATUS_CODES.OK).send({
+      chartData: chartData
+    })
+  } catch (error) {
+    res
+      .status(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR)
+      .send({ error: 'Internal Error - Internal server error' })
+  }
+}
+
 module.exports = {
   getSpendings,
   createSpending,
   deleteSpending,
   getSpending,
-  updateSpending
+  updateSpending,
+  getChartData
 }
