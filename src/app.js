@@ -9,7 +9,7 @@ const app = express()
 
 app.use(cors())
 app.use(bodyParser.json())
-app.use('/api/v1/spendings', spendingsRoute)
+app.use('/api/v1', spendingsRoute)
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}/api/v1/`)

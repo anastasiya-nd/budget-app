@@ -3,10 +3,11 @@ const controller = require('../controllers/spendings')
 
 const router = express()
 
-router.post('/', controller.createSpending)
-router.get('/', controller.getSpendings)
-router.delete('/:id', controller.deleteSpending)
-router.get('/:id', controller.getSpending)
-router.patch('/:id', controller.updateSpending)
+router.post('/spendings', controller.createSpending)
+router.get('/spendings', controller.getSpendings)
+router.delete('/spendings/:id', controller.deleteSpending)
+router.get('/spendings/:id', controller.getSpending)
+router.patch('/spendings/:id', controller.updateSpending)
+router.get('/chart', controller.getChartData)
 
 module.exports = router
