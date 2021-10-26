@@ -175,7 +175,7 @@ const updateSpending = async (req, res) => {
 const getChartData = async (req, res) => {
   try {
     const { year } = req.query
-    const spendings = await Spending.find({ createdAt: { $gte: new Date(year, 1, 1), $lte: new Date(year, 12, 31) } }).sort({ createdAt: -1 })
+    const spendings = await Spending.find({ createdAt: { $gte: new Date(year, 0, 1), $lte: new Date(year, 12, 31) } }).sort({ createdAt: -1 })
     const chartData = await setChartData(spendings)
     res.status(HTTP_STATUS_CODES.OK).send({
       chartData: chartData
